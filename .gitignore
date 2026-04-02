@@ -2,3 +2,5 @@
 !.gitignore
 !babelfi.sh
 !disown
+!LICENSE
+!README.md
