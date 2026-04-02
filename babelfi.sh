@@ -27,16 +27,28 @@ babel() {
 	cat > $MAILBOX/"$1"/"$2"
 }
 
+babelsearch() {
+	find "$MAILBOX" -maxdepth 1 -type d -printf "%P\n" | grep -vE "present|.git|^$"
+}
 
-appendMailpath $MYMAILBOX '[babelfish] Youve got mail from `stat --format="%U" "$_"`'$'\n''`basename "$_"`'$'\n''"`cat "$_"`"`\rm -f "$_"`'
-appendMailpath $MAILBOX'present' '$(grep -E "`test -z "${FRIENDS}" && echo -n "" || echo "${FRIENDS}|"`harl" "$_" >/dev/null 2>/dev/null &&
-									echo "[present] `cat "$_"` is here!" ||
-									printf "\033[A")'
+appendMailpath $MYMAILBOX '[babelfish] Youve got mail from `stat --format="%U" "$_"`
+`basename "$_"`
+"`cat "$_"`"`\rm -f "$_"`'
+appendMailpath $MAILBOX'/present' '$(
+	grep -E "`test -z "${FRIENDS}" && echo -n "" || echo "${FRIENDS}|"`harl" "$_" >/dev/null 2>/dev/null &&
+		echo "[present] `cat "$_"` is here!" ||
+		printf "\033[A"
+)'
 announcePresence() {
 	if [ "$1" ]; then
-		echo "$1" >$MAILBOX'present/'`hostname -s`
+		echo "$1" >$MAILBOX'/present/'`hostname -s`
 	else
-		whoami >$MAILBOX'present/'`hostname -s`
+		whoami >$MAILBOX'/present/'`hostname -s`
 	fi
 }
+
+removePresence() {
+	rm -f $MAILBOX'/present/'`hostname -s`
+}
+
 MAILCHECK="1"

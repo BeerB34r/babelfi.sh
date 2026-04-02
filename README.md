@@ -19,6 +19,11 @@ announces their presence you will get a notification
 
 # user instantiation
 append `. /sgoinfre/babelfi.sh` to your rc file
+if you want to opt in to presence announcement, append
+```sh
+whoami >/sgoinfre/mailbox/present/$(hostname -s)
+```
+to your `.profile` to announce your presence whenever you log in
 
 # network installation
 ```sh
