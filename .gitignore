@@ -1,7 +1,6 @@
 *
 !.gitignore
 !babelfi.sh
-!disown
 !LICENSE
 !README.md
 !logoff_watchdog
