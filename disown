@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+if ! (return 0 > /dev/null 2>&1); then
+	echo "File should not be executed, only sourced" 1>&2
+	exit 1
+elif [ -f "$PRESENT_FILE" ] && [[ "$(cat "$PRESENT_FILE")" == "$USER" ]]; then
+	exit 0
+fi
+
+_logoff_watchdog () {
+	PRESENT_FILE="${PRESENT_FILE:-${MAILBOX:-/sgoinfre/mailbox/present}/$(hostname -s)}"
+
+	trap 'rm $PRESENT_FILE' EXIT
+
+	while :; do
+		sleep 10
+	done
+}
+
+(_logoff_watchdog > /dev/null 2>&1 & disown $!)
