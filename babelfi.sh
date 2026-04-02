@@ -28,7 +28,7 @@ babel() {
 }
 
 
-appendMailpath $MYMAILBOX '[babelfish] Youve got mail from `stat --format="%U" "$_"`'$'\n''"`cat "$_"`"`\rm -f "$_"`'
+appendMailpath $MYMAILBOX '[babelfish] Youve got mail from `stat --format="%U" "$_"`'$'\n''`basename "$_"`'$'\n''"`cat "$_"`"`\rm -f "$_"`'
 appendMailpath $MAILBOX'present' '$(grep -E "`test -z "${FRIENDS}" && echo -n "" || echo "${FRIENDS}|"`harl" "$_" >/dev/null 2>/dev/null &&
 									echo "[present] `cat "$_"` is here!" ||
 									printf "\033[A")'
