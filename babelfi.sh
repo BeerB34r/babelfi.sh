@@ -1,18 +1,40 @@
 #/usr/bin/env bash
 
+# the basics
 MAILBOX='/sgoinfre/babelfish/'
 MYMAILBOX=$MAILBOX"`whoami`/"
-
+MAILCHECK="${MAILCHECK:-1}"
 mkdir --mode=777 -p $MYMAILBOX
 
 appendMailpath() {
+	[ -z "$1" ] && return 1
+
 	if [ -z "$MAILPATH" ]; then
 		MAILPATH=$1?$2
+	elif echo "$MAILPATH" | grep "$1" >/dev/null 2>/dev/null; then
+		return 0
 	else
 		MAILPATH=$1?$2:${MAILPATH}
 	fi
 }
 
+if [ -z "$BABEL_RM" -o "$BABEL_RM" = "yes" ]; then
+	appendMailpath $MYMAILBOX '[babelfish] Youve got mail from `stat --format="%U" "$_"`
+`basename "$_"`
+"`cat "$_"`"`\rm -f "$_"`'
+else
+	appendMailpath $MYMAILBOX '[babelfish] Youve got mail from `stat --format="%U" "$_"`
+`basename "$_"`
+"`cat "$_"`"'
+fi
+appendMailpath $MAILBOX'present' '$(
+	grep -E "`test -z "${FRIENDS}" && echo -n "" || echo "${FRIENDS}|"`harl" "$_" >/dev/null 2>/dev/null &&
+		echo "[present] `cat "$_"` is here!" ||
+		printf "\033[A"
+)'
+
+
+# the interfaces
 babel() {
 	if [ -z "$1" -o -z "$2" ]; then
 		echo "[USAGE] babel \"<recipient>\" \"<subject>\""
@@ -31,14 +53,16 @@ babelsearch() {
 	find "$MAILBOX" -maxdepth 1 -type d -printf "%P\n" | grep -vE "present|.git|^$"
 }
 
-appendMailpath $MYMAILBOX '[babelfish] Youve got mail from `stat --format="%U" "$_"`
-`basename "$_"`
-"`cat "$_"`"`\rm -f "$_"`'
-appendMailpath $MAILBOX'/present' '$(
-	grep -E "`test -z "${FRIENDS}" && echo -n "" || echo "${FRIENDS}|"`harl" "$_" >/dev/null 2>/dev/null &&
-		echo "[present] `cat "$_"` is here!" ||
-		printf "\033[A"
-)'
+babelseat() {
+	if [ -z "$1" ]; then
+		echo "[USAGE] babelseat <seat>"
+		return 1
+	elif [ ! -e $MAILBOX'/present/'"$1" ]; then
+		echo "[babel] Noone has been sitting at $1 recently"
+	else
+		echo "[babel] `cat $MAILBOX'/present/'"$1"` was there last"
+	fi
+}
 announcePresence() {
 	if [ "$1" ]; then
 		echo "$1" >$MAILBOX'/present/'`hostname -s`
@@ -51,4 +75,57 @@ removePresence() {
 	rm -f $MAILBOX'/present/'`hostname -s`
 }
 
-MAILCHECK="1"
+babelbacklog() {
+	if [ -z "$BABEL_RM" -o "$BABEL_RM" = "yes" ]; then
+		find $MYMAILBOX -type f -exec 'bash' '-c' 'printf "$(basename "{}")\n$(cat "{}")\n" | '"${PAGER:-less}"' && rm -f "{}"' ';'
+	else
+		find $MYMAILBOX -type f -exec 'bash' '-c' 'printf "$(basename "{}")\n$(cat "{}")\n" | '"${PAGER:-less}" ';'
+	fi
+
+}
+
+bbl() {
+	if [ -z "$1" ]; then
+		echo "[USAGE] bbl <command> [arguments]"
+		return 0
+	fi
+	case "$1" in
+		"list")
+			cat <<EOF
+bbl list
+	lists all available subcommands
+bbl send <recipient> <subject>
+	sends a message from stdin to the recipient with the subjectline subject.
+bbl search
+	shows a list of all available mailboxes
+bbl seat <position>
+	shows whoever was seated at a specific location last
+bbl announce [username]
+	announces your presence to the babelfish
+bbl leave
+	announce your departure to the babelfish
+bbl backlog
+	displays and deletes any and all mails the babelfish failed to notice you of
+EOF
+			;;
+		"send")
+			babel ${@:2}
+			;;
+		"search")
+			babelsearch
+			;;
+		"seat")
+			babelseat
+			;;
+		"announce")
+			announcePresence ${@:2}
+			;;
+		"leave")
+			removePresence
+			;;
+		"backlog")
+			babelbacklog
+			;;
+	esac
+}
+
