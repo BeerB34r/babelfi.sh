@@ -9,13 +9,17 @@ maintain a bash mail server thingy mabobber
 ## porcelain
 `babel <recipient> <subject>`
 babel writes the contents of stdin into a file `$MAILBOX/<recipient>/<subject>`
+
 `babelsearch`
 returns all available user mailboxes
+
 `babelseat <seat>`
 checks who was last seated at a spot in the cluster
+
 `announcePresence [username]`
 announces to the special mailbox `present` that you (or provided username) are
 present at your computer
+
 `removePresence`
 removes your presence file
 
@@ -28,13 +32,16 @@ a user matching a name in your `FRIENDS` variable announces their presence you
 will get a notification. the `FRIENDS` variable is used internally as a regular
 expression, if you dont know what that means, simply format `FRIENDS` as
 follows: `username1|username2|username3`
+
 default: `""`
 
 `BABEL_RM` determines wether or not a piece of mail you have been notified of
 should be removed.
+
 possible values: 
     - deleting: `"yes"`, `""`
     - keeping: `".*"`
+
 default: `""`
 
 
