@@ -5,23 +5,53 @@ This is a simple bash thingy intended for use in 42 clusters as a form of
 telecommunication. if sourced in your `~/.bashrc`, `~/.zshrc` it will create and
 maintain a bash mail server thingy mabobber
 
+# user instantiation
+run the following command to install babelfish into your shell configuration:
+```sh
+sh /sgoinfre/babelfish/install.sh
+```
+
+if you want to opt in to presence announcement, run:
+```sh
+sh /sgoinfre/babelfish/optinPresence.sh
+```
+
+# network installation
+if babelfish isnt installed in your cluster, you can install it as follows:
+```sh
+cd /sgoinfre
+git clone github.com/BeerB34r/babelfi.sh babelfish
+mkdir --mode=777 babelfish/present
+ln -s `realpath babelfish/babelfi.sh` babelfi.sh
+```
+
 # interface
 ## porcelain
-`babel <recipient> <subject>`
-babel writes the contents of stdin into a file `$MAILBOX/<recipient>/<subject>`
+`bbl`
+wraps all other babelfish commands into one, to see all available options, run
+`bbl list`
 
-`babelsearch`
-returns all available user mailboxes
+`bbl send <recipient> <subject>` || `babel <recipient> <subject>`
+sends a message from stdin to the recipient with the subjectline subject.
 
-`babelseat <seat>`
-checks who was last seated at a spot in the cluster
+`bbl search` || `babelsearch`
+shows a list of all available mailboxes
 
-`announcePresence [username]`
-announces to the special mailbox `present` that you (or provided username) are
-present at your computer
+`bbl seat <seat>` || `babelseat <seat>`
+shows whoever was seated at a specific location last
 
-`removePresence`
-removes your presence file
+`bbl announce [username]` || `announcePresence [username]`
+announces your presence to the babelfish
+
+`bbl leave` || `removePresence`
+announce your departure to the babelfish
+
+`bbl backlog` || `babelbacklog`
+displays any and all mails the babelfish failed to notice you of
+
+`bbl groupchat [recipients...]` || `babelgroupchat [recipients...]`
+send a message to all recipients, the subject line inform them of the group
+communication
 
 ## options
 > [!INFO]
@@ -45,18 +75,4 @@ possible values:
 default: `""`
 
 
-# user instantiation
-append `. /sgoinfre/babelfi.sh` to your rc file
-if you want to opt in to presence announcement, append
-```sh
-whoami >/sgoinfre/mailbox/present/$(hostname -s)
-```
-to your `.profile` to announce your presence whenever you log in
 
-# network installation
-```sh
-cd /sgoinfre
-git clone github.com/BeerB34r/babelfi.sh babelfish
-mkdir --mode=777 babelfish/present
-ln -s `realpath babelfish/babelfi.sh` babelfi.sh
-```

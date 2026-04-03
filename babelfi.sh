@@ -128,7 +128,7 @@ bbl announce [username]
 bbl leave
 	announce your departure to the babelfish
 bbl backlog
-	displays and deletes any and all mails the babelfish failed to notice you of
+	displays any and all mails the babelfish failed to notice you of
 bbl groupchat [recipients...]
 	send a message to all recipients, the subject line inform them of the group communication
 EOF
@@ -140,7 +140,7 @@ EOF
 			babelsearch
 			;;
 		"seat")
-			babelseat
+			babelseat ${@:2}
 			;;
 		"announce")
 			announcePresence ${@:2}
