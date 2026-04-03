@@ -131,6 +131,8 @@ bbl backlog
 	displays any and all mails the babelfish failed to notice you of
 bbl groupchat [recipients...]
 	send a message to all recipients, the subject line inform them of the group communication
+bbl completion
+	show source-able completion script for your current shell
 EOF
 			;;
 		"send")
@@ -153,6 +155,18 @@ EOF
 			;;
 		"groupchat")
 			babelgroupchat ${@:2}
+			;;
+		"completion")
+			case "$SHELL" in
+				*zsh)
+					cat $MAILBOX/zsh-completion
+					;;
+				*bash)
+					;;
+				*)
+					return 1
+					;;
+			esac
 			;;
 		"drizzy")
 			echo "⡥⣎⡵⢫⢧⡽⣸⡽⣭⢟⡿⣿⣿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠿⠿⠿⣿⢿⣿⣿⣿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿

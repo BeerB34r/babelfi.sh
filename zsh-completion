@@ -1,0 +1,6 @@
+_babel() {
+	_arguments \
+		'1:recipient:($(babelsearch))' \
+		'2:subject'
+}
+compdef _babel babel

@@ -6,3 +6,4 @@
 !logoff_watchdog
 !install.sh
 !optinPresence.sh
+!zsh-completion
