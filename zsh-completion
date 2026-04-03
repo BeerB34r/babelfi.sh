@@ -1,6 +1,61 @@
 _babel() {
+	local context state state_descr line
+	typeset -A opt_args
 	_arguments \
-		'1:recipient:($(babelsearch))' \
-		'2:subject'
+		':recipient:($(babelsearch))' \
+		':subject'
 }
 compdef _babel babel
+
+_babelseat() {
+	local context state state_descr line
+	typeset -A opt_args
+	_arguments \
+		':seat:($(find $MAILBOX/present -type f -printf "%P"))'
+}
+compdef _babelseat babelseat
+
+_babelgroupchat() {
+	_alternative 'arg:recipient:($(babelsearch))'
+}
+
+compdef _babelgroupchat babelgroupchat
+
+_bbl() {
+	local context state state_descr line
+	typeset -A opt_args
+	local -a subcmds=(
+		'list:lists all available subcommands'
+		'send:sends a message from stdin to the recipient with the subjectline subject'
+		'search:shows a list of all available mailboxes'
+		'seat:shows whoever was seated at a specific location last'
+		'announce:announces your presence to the babelfish'
+		'leave:announces your departure to the babelfish'
+		'backlog:displays any and all mail the babelfish failed to notice you of'
+		'groupchat:send a message to all recipients, the subject line inform them of the group communication'
+		'completion:show source-able ocmpletion script for your current shell'
+	)
+	_arguments ':subcommands:->subcmd' '*::subcommand arguments:->subcmdarg'
+
+	case "$state" in
+		subcmd)
+			_describe 'subcommand' subcmds
+			;;
+		subcmdarg)
+			echo "\"$line\"" >file
+			case "$line" in
+				send*)
+					_babel
+					;;
+				seat*)
+					_babelseat
+					;;
+				groupchat*)
+					_babelgroupchat
+					;;
+			esac
+			;;
+	esac
+}
+
+compdef _bbl bbl

@@ -21,7 +21,7 @@ appendMailpath() {
 if [ -z "$BABEL_RM" -o "$BABEL_RM" = "yes" ]; then
 	appendMailpath $MYMAILBOX '[babelfish] Youve got mail from `stat --format="%U" "$_"`
 `basename "$_"`
-"`cat "$_"`"`\rm -f "$_"`'
+`cat "$_"` `\rm -f "$_"`'
 else
 	appendMailpath $MYMAILBOX '[babelfish] Youve got mail from `stat --format="%U" "$_"`
 `basename "$_"`
@@ -126,9 +126,9 @@ bbl seat <position>
 bbl announce [username]
 	announces your presence to the babelfish
 bbl leave
-	announce your departure to the babelfish
+	announces your departure to the babelfish
 bbl backlog
-	displays any and all mails the babelfish failed to notice you of
+	displays any and all mail the babelfish failed to notice you of
 bbl groupchat [recipients...]
 	send a message to all recipients, the subject line inform them of the group communication
 bbl completion
