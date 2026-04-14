@@ -91,9 +91,9 @@ removePresence() {
 
 babelbacklog() {
 	if [ -z "$BABEL_RM" -o "$BABEL_RM" = "yes" ]; then
-		find $MYMAILBOX -type f -exec 'bash' '-c' 'printf "$(basename "{}")\n$(cat "{}")\n" | '"${PAGER:-less}"' && rm -f "{}"' ';'
+		find $MYMAILBOX -type f -printf "Mail from %u\n%f\n" -execdir "cat" "{}" ";" -printf "\n" -delete | sh -c "${PAGER:-less}"
 	else
-		find $MYMAILBOX -type f -exec 'bash' '-c' 'printf "$(basename "{}")\n$(cat "{}")\n" | '"${PAGER:-less}" ';'
+		find $MYMAILBOX -type f -printf "Mail from %u\n%f\n" -execdir "cat" "{}" ";" -printf "\n" | sh -c "${PAGER:-less}"
 	fi
 }
 
