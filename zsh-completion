@@ -11,7 +11,7 @@ _babelseat() {
 	local context state state_descr line
 	typeset -A opt_args
 	_arguments \
-		':seat:($(find $MAILBOX/present -type f -printf "%P"))'
+		':seat:($(find $MAILBOX/present -type f -printf "%P\n"))'
 }
 compdef _babelseat babelseat
 
