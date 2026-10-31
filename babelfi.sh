@@ -90,10 +90,14 @@ removePresence() {
 }
 
 babelbacklog() {
-	if [ -z "$BABEL_RM" -o "$BABEL_RM" = "yes" ]; then
-		find $MYMAILBOX -type f -printf "Mail from %u\n%f\n" -execdir "cat" "{}" ";" -printf "\n" -delete | sh -c "${PAGER:-less}"
+	if [ -n "$(find $MYMAILBOX -type f)" ]; then
+		if [ -z "$BABEL_RM" -o "$BABEL_RM" = "yes" ]; then
+			find $MYMAILBOX -type f -printf "Mail from %u\n%f\n" -execdir "cat" "{}" ";" -printf "\n" -delete | sh -c "${PAGER:-less}"
+		else
+			find $MYMAILBOX -type f -printf "Mail from %u\n%f\n" -execdir "cat" "{}" ";" -printf "\n" | sh -c "${PAGER:-less}"
+		fi
 	else
-		find $MYMAILBOX -type f -printf "Mail from %u\n%f\n" -execdir "cat" "{}" ";" -printf "\n" | sh -c "${PAGER:-less}"
+		echo "No mail found."
 	fi
 }
 
